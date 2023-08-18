@@ -1,74 +1,23 @@
 const express = require('express');
-// const mongodb = require('mongodb').MongoClient;  
-const { MongoClient, ObjectId } = require('mongodb');
+const db = require('./config/connection');
+const routes = require('./routes');
 
+const cwd = process.cwd();
+
+const PORT = 3001;
 const app = express();
-const port = 3001;
 
-const connectionStringURI = `mongodb://127.0.0.1:27017`;
+// Note: not necessary for the Express server to function. This just helps indicate what activity's server is running in the terminal.
+const activity = cwd.includes('01-Activities')
+  ? cwd.split('01-Activities')[1]
+  : cwd;
 
-const client = new MongoClient(connectionStringURI);
-
-let db;
-
-const dbName = 'socialDB';
-
-client.connect()
-  .then(() => {
-    console.log('Connected successfully to MongoDB');
-    db = client.db(dbName);
-
-    app.listen(port, () => {
-      console.log(`Example app listening at http://localhost:${port}`);
-    });
-  })
-  .catch((err) => {
-    console.error('Mongo connection error: ', err.message);
-  });
-
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(routes);
 
-
-
-app.post('/create', (req, res) => {
-  db.collection('bookCollection').insertOne(
-    { title: req.body.title, author: req.body.author }
-  )
-    .then(results => res.json(results))
-    .catch(err => {
-      if (err) throw err;
-    });
-});
-
-app.post('/create-many', (req, res) => {
-  db.collection('bookCollection').insertMany(
-    [
-      { "title": "Oh the Places We Will Go!" },
-      { "title": "Diary of Anne Frank" }
-    ]
-  )
-    .then(results => res.json(results))
-    .catch(err => {
-      if (err) throw err;
-    });
-});
-
-app.get('/read', (req, res) => {
-  db.collection('bookCollection')
-    .find({})
-    .toArray()
-    .then(results => res.json(results))
-    .catch(err => {
-      if (err) throw err;
-    });
-});
-
-app.delete('/delete', (req, res) => {
-  const bookId = new ObjectId(req.body._id);
-  db.collection('bookCollection') 
-  .deleteOne({_id: bookId})
-  .then((results) => res.json(results))
-  .catch((err) => {
-    if (err) throw err;
+db.once('open', () => {
+  app.listen(PORT, () => {
+    console.log(`API server for ${activity} running on port ${PORT}!`);
   });
 });
