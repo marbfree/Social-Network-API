@@ -1,4 +1,6 @@
-const { Thought, User } =  require('../models');
+const Thought = require('../models/Thought');
+const User = require('../models/User');
+
 
 module.exports = {
     async getThoughts(req, res) {
@@ -44,7 +46,7 @@ module.exports = {
     },
     async updateThought(req, res) {
         try {
-            const video = await Thought.findOneAndUpdate(
+            const thought = await Thought.findOneAndUpdate(
                 { _id: req.params.thoughtId },
                 { $set: req.body },
                 { runValidators: true, new: true }
@@ -80,7 +82,7 @@ module.exports = {
                 .json({ message: 'Thought deleted but no user with this ID'})
             }
 
-            res.json({ message: 'Thought successfully deleted' });
+            return res.json({ message: 'Thought successfully deleted' });
         } catch (err) {
             res.status(500).json(err);
         }

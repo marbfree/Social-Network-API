@@ -40,7 +40,7 @@ module.exports = {
                 { runValidators: true, new: true }
             );
             if (!user) {
-                return res.status(400).json({ message: 'No user with this id!'})
+                return res.status(400).json({ message: 'No user with this id!' })
             }
             res.json(user);
         } catch (err) {
