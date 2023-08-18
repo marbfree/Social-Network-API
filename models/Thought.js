@@ -11,9 +11,9 @@ const thoughtSchema = new Schema(
         },
         createdAt: {
             type: Date,
+            default: Date.now, 
             get: (date) => {
                 if (date) return date.toISOString().split("T") [0]
-            // default: Date.now, 
         },
         },
         username: {
@@ -36,5 +36,7 @@ thoughtSchema
 .get(function () {
     return this.reactions.length;
 });
+
+const Thought = model('thought', thoughtSchema);
 
 module.exports = Thought;
