@@ -13,10 +13,6 @@ const friendSchema = new Schema(
       minlength: 4,
       default: 'Unnamed friend',
     },
-    username: {
-      type: String, 
-      required: true,
-    },
     createdAt: {
       type: Date,
       default: Date.now,
