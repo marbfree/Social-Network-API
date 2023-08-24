@@ -7,7 +7,8 @@ module.exports = {
         try {
             const users = await User.find();
             res.json(users);
-        } catch (err) {
+        } catch (err){
+            console.log(err) 
             res.status(500).json(err);
         }
     },
