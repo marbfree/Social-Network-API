@@ -1,5 +1,4 @@
 const User = require('../models/User');
-const Friend = require('../models/Friend')
 const Thought = require('../models/Thought')
 
 module.exports = {
@@ -74,7 +73,7 @@ module.exports = {
     try {
       const user = await User.findOneAndUpdate(
         { _id: req.params.userId },
-        { $addToSet: { friends: req.body } },
+        { $addToSet: { friends: req.params.friendId } },
         { runValidators: true, new: true }
       );
 
